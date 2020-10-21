@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+<!--    用于获取connection-->
+    <bean id="datasource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="username" value="root"/>
+        <property name="password" value="Yhurri..0411"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/springmvc?useSSL=false&amp;serverTimezone=GMT&amp;characterEncoding=utf-8"/>
+    </bean>
+<!--创建sqlsession工厂 以前需要读取mybatis配置文件 此处通过di注入-->
+    <bean id="ssfb" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="datasource"/>
+        <property name="typeAliasesPackage" value="org.example.pojo"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:org.example.mapper/*Mapper.xml</value>
+            </list>
+        </property>
+    </bean>
+<!--    用于创建dao对象 需要sqlsessionfactory中注册的mapper 和 接口
+ 创建出的dao的id是单词首字母的小写
+-->
+    <bean id="scanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="ssfb"/>
+        <property name="basePackage" value="org.example.dao"/>
+    </bean>
+
+    <bean id="userService" class="org.example.service.UserServiceImpl">
+        <property name="userMapper" ref="userMapper"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="datasource"/>
+    </bean>
+
+<!--    配置事务属性-->
+    <tx:advice transaction-manager="transactionManager" id="transactionAdvice">
+        <tx:attributes>
+            <tx:method name="register" isolation="DEFAULT" propagation="REQUIRED"/>
+            <tx:method name="modify*"/>
+            <tx:method name="*" propagation="SUPPORTS" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="pc" expression="execution(* org.exemple.service.impl.UserServiceimpl.register(..))"/>
+        <aop:advisor advice-ref="transactionAdvice" pointcut-ref="pc"/>
+    </aop:config>
+</beans>

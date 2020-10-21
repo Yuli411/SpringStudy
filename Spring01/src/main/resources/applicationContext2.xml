@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+<!--    new自定义类型转换器对象-->
+    <bean id="dateConverter" class="org.exemple.converter.MyDateConverter">
+        <property name="pattern">
+            <value>yyyy-MM-dd</value>
+        </property>
+    </bean>
+    
+<!--    用于注册类型转换器  id must be conversionService-->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <ref bean="dateConverter"/>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="person" class="org.exemple.converter.Person">
+        <property name="name">
+            <value>tom</value>
+        </property>
+        <property name="birthday">
+            <value>2020-03-14</value>
+        </property>
+
+
+    </bean>
+</beans>

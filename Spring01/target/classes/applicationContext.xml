@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:/connection.properties"/>
+<!--    <bean id="person"  name="p,p1"   class="org.exemple.pojo.Person">-->
+<!--        <property name="id">-->
+<!--            <value>10</value>-->
+<!--        </property>-->
+<!--        <property name="name" value="tom123"/>-->
+
+<!--      array  <property name="emails">-->
+<!--            <list>-->
+<!--                <value>yuli@outlook.com</value>-->
+<!--                <value>yuli1@outlook.com</value>-->
+<!--                <value>yuli2@outlook.com</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--        <property name="tels">-->
+<!--            <set>-->
+<!--                <value>1385565111</value>-->
+<!--                <value>131235111</value>-->
+
+<!--                <value>1345645611</value>-->
+<!--            </set>-->
+<!--        </property>-->
+<!--        <property name="adresses">-->
+<!--            <list>-->
+<!--                <value>27e boulevard jourdan</value>-->
+<!--                <value>27f boulevard jourdan</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--        <property name="qqs">-->
+<!--            <map>-->
+<!--                <entry>-->
+<!--                    <key><value>tom</value></key>-->
+<!--                    <value>895123556</value>-->
+<!--                </entry>-->
+<!--            </map>-->
+<!--        </property>-->
+
+<!--        <property name="properties">-->
+<!--            <props>-->
+<!--                <prop key="key1">value1</prop>-->
+<!--                <prop key="key2">value2</prop>-->
+<!--            </props>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+<!--    <bean id="userService" class="org.exemple.service.impl.UserServiceimpl">-->
+<!--        <property name="userDao">-->
+<!--            <bean class="org.exemple.dao.impl.UserDaoImpl"></bean>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+    <bean id="userDao" class="org.exemple.dao.impl.UserDaoImpl"/>
+
+<!--    <bean id="userService" class="org.exemple.service.impl.UserServiceimpl">-->
+<!--&lt;!&ndash;        <property name="userDao">&ndash;&gt;-->
+<!--&lt;!&ndash;            <ref bean="userDao"/>&ndash;&gt;-->
+<!--&lt;!&ndash;        </property>&ndash;&gt;-->
+<!--        <property name="userDao" ref="userDao"/>-->
+<!--    </bean>-->
+
+    <bean id="person" class="org.exemple.pojo.Person" p:name="tom" p:id="3"/>
+    <bean id="userService" class="org.exemple.service.impl.UserServiceimpl" p:userDao-ref="userDao"/>
+
+    <bean id="customer" class="org.exemple.pojo.Customer">
+<!--        有几个构造参数就要写几个constructor-org标签 且顺序和构造参数顺序一致-->
+        <constructor-arg type="java.lang.String">
+            <value>mary</value>
+        </constructor-arg>
+        <constructor-arg type="int">
+            <value>102</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="connection" class="org.exemple.factorybean.ConnectionFactoryBean">
+        <property name="driverClassName" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="password" value="${password}"/>
+        <property name="username" value="${user}"/>
+    </bean>
+<!--    <bean id="connectionFactory" class="org.exemple.factorybean.ConnectionFactory">-->
+<!--    </bean>-->
+<!--    <bean id="connection" factory-bean="connectionFactory" factory-method="getConnection">-->
+<!--    </bean>-->
+    <bean id="conn" class="org.exemple.factorybean.StaticConnectionFactory" factory-method="getConnection" scope="singleton"/>
+
+
+    <bean id="account" class="org.exemple.pojo.Account" scope="singleton" lazy-init="true"/>
+    <bean id="product" class="org.exemple.life.Product"  init-method="myInit" destroy-method="myDestroy"/>
+
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
